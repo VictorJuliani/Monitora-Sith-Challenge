@@ -30,7 +30,7 @@ public class AuthorController {
     public ResponseEntity<?> one(@PathVariable Integer id) {
         log.info("[Request] Find author by id: " + id);
         Optional<Author> author = authorDAO.findById(id);
-        if (author.isEmpty()) {
+        if (!author.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
