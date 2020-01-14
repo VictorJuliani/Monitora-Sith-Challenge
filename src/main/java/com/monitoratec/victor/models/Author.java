@@ -12,10 +12,10 @@ import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
 @Data
-@Entity
+@Entity(name = "authors")
 public class Author {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotEmpty
     private String firstName;
