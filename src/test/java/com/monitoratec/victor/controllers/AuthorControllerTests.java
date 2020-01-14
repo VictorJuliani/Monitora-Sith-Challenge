@@ -14,6 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -51,7 +52,7 @@ public class AuthorControllerTests {
         };
 
         BDDMockito.when(this.authorRepository.findAll()).thenReturn(Arrays.asList(authors));
-        ResponseEntity<Author[]> response = restTemplate.getForEntity("/authors/", Author[].class);
+        ResponseEntity<Author[]> response = restTemplate.getForEntity("/api/v1/authors/", Author[].class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
         assertThat(authors).containsExactly(response.getBody());
@@ -60,7 +61,7 @@ public class AuthorControllerTests {
     @Test
     public void one_Should_Return200_When_ValidRequest() {
         BDDMockito.when(this.authorRepository.findById(author.getId())).thenReturn(Optional.of(author));
-        ResponseEntity<Author> response = restTemplate.getForEntity("/authors/{id}", Author.class, this.author.getId());
+        ResponseEntity<Author> response = restTemplate.getForEntity("/api/v1/authors/{id}", Author.class, this.author.getId());
 
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
         assertThat(this.author).isEqualTo(response.getBody());
@@ -68,14 +69,14 @@ public class AuthorControllerTests {
 
     @Test
     public void one_Should_Return404_When_NotFound() {
-        ResponseEntity<Void> response = restTemplate.getForEntity("/authors/{id}", Void.class, 100);
+        ResponseEntity<Void> response = restTemplate.getForEntity("/api/v1/authors/{id}", Void.class, 100);
         assertThat(response.getStatusCodeValue()).isEqualTo(404);
     }
 
     @Test
     public void create_Should_Return201_When_ValidRequest() {
         BDDMockito.when(this.authorRepository.save(this.author)).thenReturn(this.author);
-        ResponseEntity<Author> response = restTemplate.postForEntity("/authors/", this.author, Author.class);
+        ResponseEntity<Author> response = restTemplate.postForEntity("/api/v1/authors/", this.author, Author.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(201);
         assertThat(response.getBody()).isEqualTo(this.author);
@@ -84,7 +85,7 @@ public class AuthorControllerTests {
     @Test
     public void create_Should_Return400_When_BadPayload() {
         Author badAuthor = new Author();
-        ResponseEntity<Void> response = restTemplate.postForEntity("/authors/", badAuthor, Void.class);
+        ResponseEntity<Void> response = restTemplate.postForEntity("/api/v1/authors/", badAuthor, Void.class);
         assertThat(response.getStatusCodeValue()).isEqualTo(400);
     }
 
@@ -94,7 +95,7 @@ public class AuthorControllerTests {
         this.author.setLastName("New surname");
         BDDMockito.when(this.authorRepository.existsById(this.author.getId())).thenReturn(true);
         ResponseEntity<Void> response = restTemplate
-            .exchange("/authors/{id}", HttpMethod.PUT, new HttpEntity<>(author), Void.class, this.author.getId());
+            .exchange("/api/v1/authors/{id}", HttpMethod.PUT, new HttpEntity<>(author), Void.class, this.author.getId());
 
         assertThat(response.getStatusCodeValue()).isEqualTo(204);
     }
@@ -102,7 +103,7 @@ public class AuthorControllerTests {
     @Test
     public void update_Should_Return400_When_BadPayload() {
         ResponseEntity<Void> response = restTemplate
-                .exchange("/authors/{id}", HttpMethod.PUT, new HttpEntity<>(new Author()), Void.class, this.author.getId());
+                .exchange("/api/v1/authors/{id}", HttpMethod.PUT, new HttpEntity<>(new Author()), Void.class, this.author.getId());
 
         assertThat(response.getStatusCodeValue()).isEqualTo(400);
     }
@@ -110,7 +111,7 @@ public class AuthorControllerTests {
     @Test
     public void update_Should_Return404_When_NotFound() {
         ResponseEntity<Void> response = restTemplate
-                .exchange("/authors/{id}", HttpMethod.PUT, new HttpEntity<>(this.author), Void.class, -1);
+                .exchange("/api/v1/authors/{id}", HttpMethod.PUT, new HttpEntity<>(this.author), Void.class, -1);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(404);
     }
@@ -118,7 +119,7 @@ public class AuthorControllerTests {
     @Test
     public void delete_Should_Return204() {
         ResponseEntity<Void> response = restTemplate
-                .exchange("/authors/{id}", HttpMethod.DELETE, null, Void.class, this.author.getId());
+                .exchange("/api/v1/authors/{id}", HttpMethod.DELETE, null, Void.class, this.author.getId());
 
         assertThat(response.getStatusCodeValue()).isEqualTo(204);
     }

@@ -1,7 +1,7 @@
 package com.monitoratec.victor.controllers;
 
-import com.monitoratec.victor.models.Author;
-import com.monitoratec.victor.repositories.AuthorRepository;
+import com.monitoratec.victor.models.AuthorV2;
+import com.monitoratec.victor.repositories.AuthorRepositoryV2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,11 +14,11 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/authors")
+@RequestMapping("/api/v2/authors")
 @SuppressWarnings("unused")
-public class AuthorController {
+public class AuthorControllerV2 {
     @Autowired
-    private AuthorRepository authorDAO;
+    private AuthorRepositoryV2 authorDAO;
 
     @GetMapping
     public ResponseEntity<?> listAll() {
@@ -29,7 +29,7 @@ public class AuthorController {
     @GetMapping(path = "/{id}")
     public ResponseEntity<?> one(@PathVariable Integer id) {
         log.info("[Request] Find author by id: " + id);
-        Optional<Author> author = authorDAO.findById(id);
+        Optional<AuthorV2> author = authorDAO.findById(id);
         if (!author.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
@@ -38,14 +38,14 @@ public class AuthorController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody Author author) {
+    public ResponseEntity<?> create(@Valid @RequestBody AuthorV2 author) {
         log.info("[Request] Create author:" + author);
         authorDAO.save(author);
         return ResponseEntity.status(HttpStatus.CREATED).body(author);
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @Valid @RequestBody Author author) {
+    public ResponseEntity<?> update(@PathVariable Integer id, @Valid @RequestBody AuthorV2 author) {
         if (!authorDAO.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

@@ -1,9 +1,8 @@
 package com.monitoratec.victor.repositories;
 
 import com.monitoratec.victor.models.Author;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface AuthorRepository extends CrudRepository<Author, Integer> {
+@Repository("v1")
+public interface AuthorRepository extends IAuthorRepository<Author> {
 }
