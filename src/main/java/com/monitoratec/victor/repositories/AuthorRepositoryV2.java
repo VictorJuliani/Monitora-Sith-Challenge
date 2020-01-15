@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository("v2")
-public interface AuthorRepositoryV2 extends CrudRepository<AuthorV2, Integer> {
+public interface AuthorRepositoryV2 extends IAuthorRepository<AuthorV2> {
 }

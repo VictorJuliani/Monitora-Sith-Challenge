@@ -13,18 +13,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "authors")
-public class AuthorV2 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @NotEmpty
-    private String firstName;
-    @NotEmpty
-    private String lastName;
-    @NotNull @Past
-    private LocalDate birthdate;
-    @NotNull
-    private boolean distinguished;
+public class AuthorV2 extends Author {
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
             name = "author_book",

@@ -9,32 +9,17 @@ import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
 @Data
-@Entity
-@Table(name = "authors")
-public class Author {
+@MappedSuperclass
+public abstract class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    protected int id;
     @NotEmpty
-    private String firstName;
+    protected String firstName;
     @NotEmpty
-    private String lastName;
+    protected String lastName;
     @NotNull @Past
-    private LocalDate birthdate;
+    protected LocalDate birthdate;
     @NotNull
-    private boolean distinguished;
-
-    public Author() {}
-
-    public Author(@NotEmpty String firstName, @NotEmpty String lastName, @NotNull @Past LocalDate birthdate, @NotNull boolean distinguished) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthdate = birthdate;
-        this.distinguished = distinguished;
-    }
-
-    public Author(int id, @NotEmpty String firstName, @NotEmpty String lastName, @NotNull @Past LocalDate birthdate, @NotNull boolean distinguished) {
-        this(firstName, lastName, birthdate, distinguished);
-        this.id = id;
-    }
+    protected boolean distinguished;
 }

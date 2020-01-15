@@ -1,6 +1,7 @@
 package com.monitoratec.victor.controllers;
 
 import com.monitoratec.victor.models.Author;
+import com.monitoratec.victor.models.AuthorV1;
 import com.monitoratec.victor.repositories.AuthorRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,12 +31,12 @@ public class AuthorControllerTests {
     @MockBean
     private AuthorRepository authorRepository;
 
-    private Author author;
+    private AuthorV1 author;
 
     @Before
     public void setup() {
         LocalDate defaultBirth = LocalDate.of(1995, 9, 2);
-        author = new Author();
+        author = new AuthorV1();
         author.setId(1);
         author.setFirstName("Victor");
         author.setLastName("Juliani");
@@ -45,14 +46,14 @@ public class AuthorControllerTests {
 
     @Test
     public void list_Should_Return200_When_ValidRequest() {
-        Author[] authors = {
-            new Author(10, "John", "Doe", LocalDate.of(1980, 10, 10), true),
-            new Author(11, "Jane", "Lorem", LocalDate.of(1970, 1, 30), false),
-            new Author(12, "Jack", "Johnson", LocalDate.of(1990, 5, 20), true)
+        AuthorV1[] authors = {
+            new AuthorV1(10, "John", "Doe", LocalDate.of(1980, 10, 10), true),
+            new AuthorV1(11, "Jane", "Lorem", LocalDate.of(1970, 1, 30), false),
+            new AuthorV1(12, "Jack", "Johnson", LocalDate.of(1990, 5, 20), true)
         };
 
         BDDMockito.when(this.authorRepository.findAll()).thenReturn(Arrays.asList(authors));
-        ResponseEntity<Author[]> response = restTemplate.getForEntity("/api/v1/authors/", Author[].class);
+        ResponseEntity<AuthorV1[]> response = restTemplate.getForEntity("/api/v1/authors/", AuthorV1[].class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
         assertThat(authors).containsExactly(response.getBody());
@@ -61,7 +62,7 @@ public class AuthorControllerTests {
     @Test
     public void one_Should_Return200_When_ValidRequest() {
         BDDMockito.when(this.authorRepository.findById(author.getId())).thenReturn(Optional.of(author));
-        ResponseEntity<Author> response = restTemplate.getForEntity("/api/v1/authors/{id}", Author.class, this.author.getId());
+        ResponseEntity<AuthorV1> response = restTemplate.getForEntity("/api/v1/authors/{id}", AuthorV1.class, this.author.getId());
 
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
         assertThat(this.author).isEqualTo(response.getBody());
@@ -76,7 +77,7 @@ public class AuthorControllerTests {
     @Test
     public void create_Should_Return201_When_ValidRequest() {
         BDDMockito.when(this.authorRepository.save(this.author)).thenReturn(this.author);
-        ResponseEntity<Author> response = restTemplate.postForEntity("/api/v1/authors/", this.author, Author.class);
+        ResponseEntity<AuthorV1> response = restTemplate.postForEntity("/api/v1/authors/", this.author, AuthorV1.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(201);
         assertThat(response.getBody()).isEqualTo(this.author);
@@ -84,7 +85,7 @@ public class AuthorControllerTests {
 
     @Test
     public void create_Should_Return400_When_BadPayload() {
-        Author badAuthor = new Author();
+        AuthorV1 badAuthor = new AuthorV1();
         ResponseEntity<Void> response = restTemplate.postForEntity("/api/v1/authors/", badAuthor, Void.class);
         assertThat(response.getStatusCodeValue()).isEqualTo(400);
     }
@@ -103,7 +104,7 @@ public class AuthorControllerTests {
     @Test
     public void update_Should_Return400_When_BadPayload() {
         ResponseEntity<Void> response = restTemplate
-                .exchange("/api/v1/authors/{id}", HttpMethod.PUT, new HttpEntity<>(new Author()), Void.class, this.author.getId());
+                .exchange("/api/v1/authors/{id}", HttpMethod.PUT, new HttpEntity<>(new AuthorV1()), Void.class, this.author.getId());
 
         assertThat(response.getStatusCodeValue()).isEqualTo(400);
     }

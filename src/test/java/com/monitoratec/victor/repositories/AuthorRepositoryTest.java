@@ -1,6 +1,7 @@
 package com.monitoratec.victor.repositories;
 
 import com.monitoratec.victor.models.Author;
+import com.monitoratec.victor.models.AuthorV1;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,13 +24,13 @@ public class AuthorRepositoryTest {
     @Autowired
     private TestEntityManager entityManager;
 
-    private Author author;
+    private AuthorV1 author;
     private LocalDate defaultBirth;
 
     @Before
     public void setup() {
         LocalDate defaultBirth = LocalDate.of(1995, 9, 2);
-        Author author = new Author();
+        AuthorV1 author = new AuthorV1();
         author.setFirstName("Victor");
         author.setLastName("Juliani");
         author.setDistinguished(true);
@@ -55,7 +56,7 @@ public class AuthorRepositoryTest {
         this.repository.save(author);
         this.repository.deleteById(author.getId());
 
-        Optional<Author> deletedAuthor = this.repository.findById(author.getId());
+        Optional<AuthorV1> deletedAuthor = this.repository.findById(author.getId());
         assertThat(deletedAuthor.isPresent()).isFalse();
     }
 
