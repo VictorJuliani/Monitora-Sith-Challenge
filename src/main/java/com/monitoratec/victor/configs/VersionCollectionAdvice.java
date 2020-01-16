@@ -20,8 +20,10 @@ public class VersionCollectionAdvice implements IVersionAdvice, ResponseBodyAdvi
         // TODO: check for Arrays to? Can we merge all advices into one?
         if (param.getGenericParameterType() instanceof ParameterizedType) {
             ParameterizedType type = (ParameterizedType) param.getGenericParameterType();
-            Class<?> paramClazz = (Class<?>) type.getActualTypeArguments()[0];
-            return this.hasVersionedInterface(paramClazz);
+            if (type.getActualTypeArguments()[0] instanceof Class) {
+                Class<?> paramClazz = (Class<?>) type.getActualTypeArguments()[0];
+                return this.hasVersionedInterface(paramClazz);
+            }
         }
 
         return false;
