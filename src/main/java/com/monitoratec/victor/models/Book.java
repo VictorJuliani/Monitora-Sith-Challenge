@@ -1,6 +1,9 @@
 package com.monitoratec.victor.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -12,6 +15,9 @@ import java.util.Set;
 
 @Data
 @Entity(name = "books")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,23 +32,9 @@ public class Book {
     @Column(columnDefinition = "ENUM('ENGLISH', 'PORTUGUESE', 'ITALIAN', 'RUSSIAN')")
     @Enumerated(EnumType.STRING)
     @NotNull
-    private BookLanguage language;
+    private Book.BookLanguage language;
     @ManyToMany(mappedBy = "books")
-    private Set<AuthorV2> authors = new HashSet<>();
-
-    public Book() {}
-
-    public Book(@NotEmpty String title, @NotEmpty String publisherName, @NotNull @Past LocalDate publishDate, @NotNull BookLanguage language) {
-        this.title = title;
-        this.publisherName = publisherName;
-        this.publishDate = publishDate;
-        this.language = language;
-    }
-
-    public Book(int id, @NotEmpty String title, @NotEmpty String publisherName, @NotNull @Past LocalDate publishDate, @NotNull BookLanguage language) {
-        this(title, publisherName, publishDate, language);
-        this.id = id;
-    }
+    private final Set<Author> authors = new HashSet<>();
 
     public enum BookLanguage {
         ENGLISH,

@@ -1,65 +1,72 @@
 package com.monitoratec.victor.controllers;
 
 import com.monitoratec.victor.models.Book;
-import com.monitoratec.victor.repositories.BookRepository;
+import com.monitoratec.victor.models.dto.BookDTO;
+import com.monitoratec.victor.services.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/books")
+@RequestMapping("/v1/books")
 @SuppressWarnings("unused")
 public class BookController {
     @Autowired
-    private BookRepository bookDAO;
+    private BookService bookService;
 
     @GetMapping
-    public ResponseEntity<?> listAll() {
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<BookDTO> listAll() {
         log.info("[Request] List of books");
-        return new ResponseEntity<>(bookDAO.findAll(), HttpStatus.OK);
+        List<Book> books = this.bookService.list();
+
+        return BookDTO.fromBooks(books, true);
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<?> one(@PathVariable Integer id) {
+    @ResponseStatus(HttpStatus.OK)
+    public BookDTO one(@PathVariable Integer id) {
         log.info("[Request] Find book by id: " + id);
-        Optional<Book> book = bookDAO.findById(id);
+        Optional<Book> book = this.bookService.one(id);
         if (!book.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(book.get(), HttpStatus.OK);
+        return BookDTO.fromBook(book.get(), true);
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody Book book) {
-        log.info("[Request] Create book:" + book);
-        bookDAO.save(book);
-        return new ResponseEntity<>(book, HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public BookDTO create(@Valid @RequestBody BookDTO bookDto) {
+        log.info("[Request] Create book:" + bookDto);
+        Book book = this.bookService.save(bookDto, 0);
+
+        return BookDTO.fromBook(book, true);
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @Valid @RequestBody Book book) {
-        if (!bookDAO.existsById(id)) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@PathVariable Integer id, @Valid @RequestBody BookDTO bookDto) {
+        if (!this.bookService.exists(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        log.info("[Request] Update book: " + id + " with: " + book);
-
-        bookDAO.save(book);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        log.info("[Request] Update book: " + id + " with: " + bookDto);
+        this.bookService.save(bookDto, id);
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Integer id) {
         log.info("[Request] Delete book:" + id);
-        bookDAO.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        this.bookService.delete(id);
     }
 }
