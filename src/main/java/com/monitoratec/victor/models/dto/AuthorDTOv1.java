@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Data
 public class AuthorDTOv1 implements IVersioned {
-    private final int id;
+    private final Integer id;
     private final String firstName;
     private final String lastName;
     private final LocalDate birthdate;

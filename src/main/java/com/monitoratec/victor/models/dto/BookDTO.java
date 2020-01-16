@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Data
 public class BookDTO implements IVersioned {
-    private final int id;
+    private final Integer id;
     private final String title;
     private final String publisherName;
     private final LocalDate publishDate;

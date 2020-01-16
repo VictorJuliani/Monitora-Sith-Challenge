@@ -47,7 +47,7 @@ public class BookController {
     @ResponseStatus(HttpStatus.CREATED)
     public BookDTO create(@Valid @RequestBody BookDTO bookDto) {
         log.info("[Request] Create book:" + bookDto);
-        Book book = this.bookService.save(bookDto, 0);
+        Book book = this.bookService.save(bookDto, null);
 
         return BookDTO.fromBook(book, true);
     }

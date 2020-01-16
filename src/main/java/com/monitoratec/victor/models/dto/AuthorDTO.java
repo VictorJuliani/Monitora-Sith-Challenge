@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Data
 public class AuthorDTO implements IVersioned {
-    private final int id;
+    private final Integer id;
     private final String firstName;
     private final String lastName;
     private final LocalDate birthdate;

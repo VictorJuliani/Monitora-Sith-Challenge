@@ -18,7 +18,7 @@ import java.util.Set;
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     @NotEmpty
     private String firstName;
     @NotEmpty

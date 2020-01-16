@@ -61,7 +61,7 @@ public class AuthorController {
     @ResponseStatus(HttpStatus.CREATED)
     public AuthorDTO create(@Valid @RequestBody AuthorDTO authorDto) {
         this.log("Create:" + authorDto);
-        Author author = this.authorService.save(authorDto, 0);
+        Author author = this.authorService.save(authorDto, null);
 
         return AuthorDTO.fromAuthor(author, true);
     }

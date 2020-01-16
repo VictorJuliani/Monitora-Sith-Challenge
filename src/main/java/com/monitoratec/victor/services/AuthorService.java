@@ -16,7 +16,7 @@ public class AuthorService extends AService<Author, AuthorRepository> {
         return this.repository;
     }
 
-    public Author save(AuthorDTO authorDto, int id) {
+    public Author save(AuthorDTO authorDto, Integer id) {
         Author author = AuthorDTO.toAuthor(authorDto, true);
         // ensure the id is correct to avoid creation on update and vice-versa
         author.setId(id);

@@ -16,7 +16,7 @@ public class BookService extends AService<Book, BookRepository> {
         return repository;
     }
 
-    public Book save(BookDTO bookDto, int id) {
+    public Book save(BookDTO bookDto, Integer id) {
         Book book = BookDTO.toBook(bookDto, true);
         // ensure the id is correct to avoid creation on update and vice-versa
         book.setId(id);
