@@ -15,6 +15,13 @@ public class AuthorDTOv1 implements IVersioned {
 
     @Override
     public IVersioned toVersion(int version) {
+        if (version >= 2) {
+            AuthorDTO upperVersion = new AuthorDTO(
+                    id, firstName, lastName, birthdate, distinguished
+            );
+
+            return upperVersion.toVersion(version);
+        }
         return this;
     }
 }

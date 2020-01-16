@@ -3,6 +3,7 @@ package com.monitoratec.victor.controllers;
 import com.monitoratec.victor.models.Author;
 import com.monitoratec.victor.models.Book;
 import com.monitoratec.victor.models.dto.AuthorDTO;
+import com.monitoratec.victor.models.dto.AuthorDTOv1;
 import com.monitoratec.victor.models.dto.BookDTO;
 import com.monitoratec.victor.services.AuthorService;
 import lombok.extern.slf4j.Slf4j;
@@ -54,10 +55,7 @@ public class AuthorController {
         return AuthorDTO.fromAuthor(author.get(), true);
     }
 
-    @PostMapping({
-        "/v2/authors",
-        "/v1/authors"
-    })
+    @PostMapping("/v2/authors")
     @ResponseStatus(HttpStatus.CREATED)
     public AuthorDTO create(@Valid @RequestBody AuthorDTO authorDto) {
         this.log("Create:" + authorDto);
@@ -66,10 +64,16 @@ public class AuthorController {
         return AuthorDTO.fromAuthor(author, true);
     }
 
-    @PutMapping({
-        "/v2/authors/{id}",
-        "/v1/authors/{id}"
-    })
+    @PostMapping("/v1/authors")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AuthorDTO createV1(@Valid @RequestBody AuthorDTOv1 authorDto) {
+        this.log("Create:" + authorDto);
+        Author author = this.authorService.save((AuthorDTO) authorDto.toVersion(2), null);
+
+        return AuthorDTO.fromAuthor(author, true);
+    }
+
+    @PutMapping("/v2/authors/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable Integer id, @Valid @RequestBody AuthorDTO authorDto) {
         if (!this.authorService.exists(id)) {
@@ -78,6 +82,17 @@ public class AuthorController {
 
         this.log("Update: " + id + " with: " + authorDto);
         this.authorService.save(authorDto, id);
+    }
+
+    @PutMapping("/v1/authors/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateV1(@PathVariable Integer id, @Valid @RequestBody AuthorDTOv1 authorDto) {
+        if (!this.authorService.exists(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        this.log("Update: " + id + " with: " + authorDto);
+        this.authorService.save((AuthorDTO) authorDto.toVersion(2), id);
     }
 
     @DeleteMapping({
