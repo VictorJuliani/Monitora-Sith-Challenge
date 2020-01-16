@@ -62,7 +62,7 @@ public class BookControllerTests {
         ResponseEntity<BookDTO[]> response = restTemplate.getForEntity("/v1/books", BookDTO[].class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
-        assertThat(bookDtos).containsExactly(response.getBody());
+        assertThat(response.getBody()).containsExactly(bookDtos);
     }
 
     @Test
