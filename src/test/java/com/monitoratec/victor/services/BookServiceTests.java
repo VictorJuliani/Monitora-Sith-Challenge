@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 @AutoConfigureTestEntityManager
-public class BookServiceTest {
+public class BookServiceTests {
     @Autowired
     private BookService service;
     @Autowired

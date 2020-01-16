@@ -13,7 +13,7 @@ import java.util.Iterator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BookDTOTest {
+public class BookDTOTests {
     private final LocalDate date = LocalDate.of(2000, 10, 10);
     private Book.BookBuilder bookBuilder;
     private Author.AuthorBuilder authorBuilder;
